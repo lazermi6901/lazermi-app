@@ -1,1 +1,0 @@
-LAZERMI V6 — davantage de paliers G → 🎾 modifiables dans Admin, 6 emplacements musique (3 JUL, 3 LAGUI), design V5 conservé. Les fichiers audio commerciaux ne sont pas inclus. Catalogue fictif de jeu. Stockage admin local à cet appareil.
