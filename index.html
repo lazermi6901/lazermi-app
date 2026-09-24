@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050505"><title>LAZERMI</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050505;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:560px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 14px 92px;background:linear-gradient(#070707,#030303)}
+header{height:86px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:30px;font-weight:900;font-style:italic;letter-spacing:-1.5px}.icon{font-size:29px}
+.tabs{display:flex;gap:9px;overflow:auto;padding-bottom:15px}.tab{white-space:nowrap;border:1px solid #383838;border-radius:25px;padding:9px 18px;color:#bbb}.tab.active{border:2px solid #fff;color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{border:1px solid #333;border-radius:18px;overflow:hidden;background:#080808;position:relative}.card h3{font-size:17px;margin:11px 10px 7px;text-decoration:underline}.pic{height:165px;background:radial-gradient(circle at 45% 40%,#5b5b5b,#161616 48%,#050505);display:flex;align-items:center;justify-content:center;font-size:54px}.heart{position:absolute;right:11px;top:10px;font-size:24px}.stats{padding:10px 12px;font-size:16px;line-height:1.65}.sold{color:#ff3b30;font-weight:900;font-size:14px;letter-spacing:.7px;margin:0 12px 4px}.detail{margin:0 10px 11px;border:1px solid #444;border-radius:25px;padding:10px 13px;display:flex;justify-content:space-between}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(560px,100%);height:76px;background:#080808ee;border-top:1px solid #333;display:flex;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom)}
+nav button{background:none;border:0;color:#aaa;font-size:12px}.navico{display:block;font-size:23px;margin-bottom:3px}.activeNav{color:#fff!important}
+.admin{position:fixed;right:16px;bottom:92px;border:1px solid #555;background:#151515;color:#fff;border-radius:25px;padding:11px 15px}
+.modal{display:none;position:fixed;inset:0;background:#050505;z-index:5;padding:25px 18px;overflow:auto}.modal.open{display:block}.modal input,.modal select{width:100%;padding:13px;margin:6px 0 12px;border-radius:12px;border:1px solid #444;background:#111;color:white}.save{width:100%;padding:14px;border:0;border-radius:14px;font-weight:800}.switch{display:flex;gap:10px;align-items:center;margin:14px 0}
+small{color:#999}
+</style></head>
+<body><main class="app">
+<header><span class="icon">♛</span><div class="brand">LAZERMI</div><span class="icon">⌕</span></header>
+<div class="tabs"><span class="tab active">Tous</span><span class="tab">Objets</span><span class="tab">Rares</span><span class="tab">Filtres</span><span class="tab">Autres</span></div>
+<section class="grid" id="grid"></section>
+<button class="admin" onclick="openAdmin()">⚙︎ Créateur</button>
+<nav><button class="activeNav"><span class="navico">⌂</span>Accueil</button><button><span class="navico">♧</span>Produits</button><button><span class="navico">♡</span>Favoris</button><button><span class="navico">♙</span>Profil</button></nav>
+</main>
+<div class="modal" id="admin">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2>Mode créateur</h2><button onclick="closeAdmin()" style="background:none;border:0;color:white;font-size:28px">×</button></div>
+<small>Démo locale. La version connectée à Supabase réserve les modifications au compte administrateur.</small>
+<label>Item</label><select id="sel" onchange="loadForm()"></select>
+<label>Nom</label><input id="name">
+<label>Image (URL)</label><input id="image" placeholder="https://…">
+<label>Valeur G</label><input id="g">
+<label>Points 🎾</label><input id="balls">
+<div class="switch"><input id="sold" type="checkbox" style="width:auto;margin:0"><label for="sold">Marquer comme ÉPUISÉ</label></div>
+<button class="save" onclick="save()">Enregistrer</button>
+</div>
+<script>
+let items=[
+{name:"CRYSTAL LEMON",emoji:"💎",g:"1.4",balls:10,sold:false},
+{name:"VIOLET MONSTER",emoji:"🔮",g:"1.7",balls:10,sold:true},
+{name:"FILTRE X3 90U",emoji:"◉",g:"1.4",balls:10,sold:false},
+{name:"PURPLE CORE",emoji:"✦",g:"1.0",balls:10,sold:false}
+];
+function render(){grid.innerHTML=items.map((x,i)=>`<article class="card"><h3>${x.name}</h3><span class="heart">♡</span><div class="pic">${x.emoji}</div>${x.sold?'<div class="sold">ÉPUISÉ</div>':''}<div class="stats">G ${x.g} &nbsp;→&nbsp; 🎾 ${x.balls}<br>G ${(x.g*2).toFixed(1)} → 🎾 ${x.balls*2}<br>G ${(x.g*3).toFixed(1)} → 🎾 ${x.balls*3}</div><div class="detail">Voir détails <b>›</b></div></article>`).join("")}
+function openAdmin(){admin.classList.add("open");sel.innerHTML=items.map((x,i)=>`<option value="${i}">${x.name}</option>`).join("");loadForm()}
+function closeAdmin(){admin.classList.remove("open")}
+function loadForm(){let x=items[+sel.value];name.value=x.name;g.value=x.g;balls.value=x.balls;sold.checked=x.sold}
+function save(){let x=items[+sel.value];x.name=name.value;x.g=parseFloat(g.value)||0;x.balls=parseInt(balls.value)||0;x.sold=sold.checked;localStorage.setItem("lazermi-demo",JSON.stringify(items));render();closeAdmin()}
+let saved=localStorage.getItem("lazermi-demo");if(saved)items=JSON.parse(saved);render();
+</script></body></html>
