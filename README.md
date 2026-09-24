@@ -1,0 +1,1 @@
+LAZERMI V2 — version statique iPhone/GitHub Pages. Tous les onglets principaux, Voir détails, favoris, collection, musique et panneau créateur sont interactifs. Catalogue de jeu fictif. Le panneau créateur sauvegarde localement sur l'appareil ; une authentification privée synchronisée nécessite un backend.
